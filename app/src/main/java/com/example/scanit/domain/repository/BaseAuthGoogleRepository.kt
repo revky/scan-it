@@ -1,12 +1,16 @@
 package com.example.scanit.domain.repository
 
-import com.google.firebase.auth.FirebaseUser
+import com.example.scanit.util.Response
+import com.google.android.gms.auth.api.identity.BeginSignInResult
+import com.google.firebase.auth.AuthCredential
+import kotlinx.coroutines.flow.Flow
 
 interface BaseAuthRepository {
+    fun oneTapSignInWithGoogle(): Flow<Response<BeginSignInResult>>
 
-    suspend fun signInWithGoogle(): FirebaseUser?
+    fun firebaseSignInWithGoogle(googleCredential: AuthCredential): Flow<Response<Boolean>>
 
-    suspend fun signOut(): FirebaseUser?
+    fun signOut(): Flow<Response<Boolean>>
 
-    suspend fun getUser(): FirebaseUser?
+    fun revokeAccess(): Flow<Response<Boolean>>
 }

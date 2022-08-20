@@ -1,4 +1,8 @@
 package com.example.scanit.domain.model
 
-class Product {
-}
+data class Product(
+    var id: String = "",
+    var name: String = "",
+    var quantity: Int = 0,
+    var price: Int = 0
+)

@@ -1,16 +1,10 @@
 package com.example.scanit.presentation.main.home
 
 import androidx.annotation.DrawableRes
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import com.example.scanit.R
@@ -41,17 +35,56 @@ enum class BottomBarDestination(
 }
 
 @Composable
-fun TopBar() {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Start,
-        modifier = Modifier.fillMaxWidth()
+fun TopBar(
+    signOut: () -> Unit,
+    revokeAccess: () -> Unit
+) {
+    val isOpen = remember {
+        mutableStateOf(false)
+    }
+
+    TopAppBar(
+        title = {
+            Text(text = "Scan It!")
+        },
+        actions = {
+            IconButton(onClick = { isOpen.value = !isOpen.value }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_menu),
+                    contentDescription = "menuIcon"
+                )
+            }
+            MyDropdownMenu(
+                isOpen = isOpen.value,
+                signOut = {
+                    signOut()
+                },
+                revokeAccess = {
+                    revokeAccess()
+                },
+                changeOpenStatus = { isOpen.value = !isOpen.value })
+        })
+}
+
+@Composable
+fun MyDropdownMenu(
+    isOpen: Boolean,
+    signOut: () -> Unit,
+    revokeAccess: () -> Unit,
+    changeOpenStatus: () -> Unit
+) {
+    DropdownMenu(
+        expanded = isOpen,
+        onDismissRequest = { changeOpenStatus() }
     ) {
-        Icon(
-            painter = painterResource(id = R.drawable.ic_receipt),
-            contentDescription = "applicationLogo"
-        )
-        Text(text = "Scan It!")
+        DropdownMenuItem(onClick = {
+            signOut()
+        }) {
+            Text(text = "Logout")
+        }
+        DropdownMenuItem(onClick = { revokeAccess() }) {
+            Text(text = "Revoke access")
+        }
     }
 }
 

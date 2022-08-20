@@ -1,4 +1,9 @@
 package com.example.scanit.domain.model
 
-class Receipt {
-}
+import java.util.*
+
+data class Receipt(
+    var id: String = "",
+    var date: Date = Date(),
+    var products: List<Product> = listOf(),
+)

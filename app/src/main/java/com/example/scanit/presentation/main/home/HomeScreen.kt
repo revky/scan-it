@@ -1,5 +1,6 @@
 package com.example.scanit.presentation.main.home
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.FloatingActionButton
@@ -7,18 +8,31 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.scanit.R
 import com.example.scanit.presentation.NavGraphs
+import com.example.scanit.presentation.common.ConfirmCancelDialog
 import com.example.scanit.presentation.destinations.ReceiptsTabDestination
+import com.example.scanit.presentation.destinations.SignInWithGoogleScreenDestination
 import com.ramcosta.composedestinations.DestinationsNavHost
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @com.ramcosta.composedestinations.annotation.Destination
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    navigator: DestinationsNavigator,
+    viewModel: HomeViewModel = hiltViewModel()
+) {
+    val logoutDialogState = remember {
+        mutableStateOf(false)
+    }
+
     val homeScreenNavController = rememberNavController()
 //    val navBackStackEntry by homeScreenNavController.currentBackStackEntryAsState()
 //    val currentRoute = navBackStackEntry?.destination?.route?.substringBefore('?')
@@ -37,11 +51,45 @@ fun HomeScreen() {
 //        ).any { it == currentRoute }
 //    viewModel.onBottomBarChange(bottomBarState)
 
+    BackHandler(enabled = true) {
+        logoutDialogState.value = !logoutDialogState.value
+    }
+
     Surface {
+        ConfirmCancelDialog(
+            visible = logoutDialogState.value,
+            onValueChanged = {
+                logoutDialogState.value = !logoutDialogState.value
+                if (it) {
+                    viewModel.signOut()
+                    navigator.popBackStack("sign_in_with_google_screen", true)
+                    navigator.navigate(SignInWithGoogleScreenDestination) {
+                        launchSingleTop = true
+                    }
+                }
+            },
+            title = "Log out",
+            text = "Do you want to log out?"
+        )
         Scaffold(
             backgroundColor = Color.Transparent,
             topBar = {
-                TopBar()
+                TopBar(
+                    signOut = {
+                        viewModel.signOut()
+                        navigator.popBackStack("sign_in_with_google_screen", true)
+                        navigator.navigate(SignInWithGoogleScreenDestination){
+                            launchSingleTop = true
+                        }
+                    },
+                    revokeAccess = {
+                        viewModel.revokeAccess()
+                        navigator.popBackStack("sign_in_with_google_screen", true)
+                        navigator.navigate(SignInWithGoogleScreenDestination){
+                            launchSingleTop = true
+                        }
+                    }
+                )
             },
             floatingActionButton = {
                 FloatingActionButton(

@@ -11,4 +11,11 @@ object Constants {
     //DI NAMES
     const val SIGN_IN_REQ = "signInRequest"
     const val SIGN_UP_REQ = "signUpRequest"
+
+    //REFS
+    const val RECEIPTS_REF = "receipts"
+    const val PRODUCTS_REF = "products"
+
+    //FIRESTORE
+    const val USER_ID = "idOwner"
 }

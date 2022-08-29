@@ -11,8 +11,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.example.scanit.domain.model.Receipt
 import com.example.scanit.R
+import com.example.scanit.domain.model.Receipt
 import com.example.scanit.util.toDayOfTheWeek
 import com.example.scanit.util.toLongDateString
 
@@ -36,11 +36,15 @@ fun Receipt(
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp)
         ) {
-            Text(text =  receipt.date.toDayOfTheWeek())
-            Text(text =  receipt.date.toLongDateString())
-            Text(text = "50 zł")
+            Text(text = receipt.date.toDayOfTheWeek())
+            Text(text = receipt.date.toLongDateString())
+            Text(text = receipt.products.sumOf {
+                it.price
+            }.toString())
             IconButton(
                 onClick = {
                     onDeleteClick()

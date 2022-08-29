@@ -1,10 +1,10 @@
 package com.example.scanit.presentation.main.receipts_tab.receipt_details
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -26,7 +26,8 @@ fun ReceiptDetailsScreen(
 ) {
     var receipt = Receipt(
         products = listOf(
-            com.example.scanit.domain.model.Product("", "Name", 0, 0)
+            com.example.scanit.domain.model.Product("", "Jajo", 2, 0),
+            com.example.scanit.domain.model.Product("", "Chleb", 1, 1)
         )
     )
 
@@ -37,17 +38,20 @@ fun ReceiptDetailsScreen(
     ) {
         Text(
             text = receipt.date.toLongDateString(),
-            fontSize = 24.sp
+            fontSize = 24.sp,
+            modifier = Modifier.padding(bottom = 10.dp)
         )
         LazyColumn(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.Start
         ) {
+            item {
+                ProductHeader(backgroundColor = MaterialTheme.colors.primary)
+            }
             receipt.products.forEach {
                 item {
                     Product(
                         product = it,
-                        backgroundColor = Color.Transparent
                     )
                 }
             }

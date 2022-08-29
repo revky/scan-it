@@ -1,10 +1,12 @@
 package com.example.scanit.presentation.main.receipts_tab.receipt_details
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
+import androidx.compose.material.SnackbarDefaults.backgroundColor
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,13 +23,12 @@ import com.example.scanit.domain.model.Product
 @Composable
 fun Product(
     modifier: Modifier = Modifier,
-    product: Product,
-    backgroundColor: Color
+    product: Product
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(top = 15.dp)
             .drawBehind {
@@ -43,19 +44,71 @@ fun Product(
             }
     ) {
         Icon(
+            modifier = Modifier.weight(0.5f),
             painter = painterResource(id = R.drawable.ic_arrow),
             contentDescription = "arrowIcon"
         )
         Text(
+            modifier = Modifier.weight(1f),
             text = product.name,
             fontSize = 24.sp
         )
         Text(
+            modifier = Modifier.weight(1f),
             text = product.quantity.toString(),
             fontSize = 24.sp
         )
         Text(
-            text = product.price.toString(),
+            modifier = Modifier.weight(1f),
+            text = "${product.price} zł",
+            fontSize = 24.sp
+        )
+    }
+}
+
+@Composable
+fun ProductHeader(
+    modifier: Modifier = Modifier,
+    backgroundColor : Color
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = modifier
+            .fillMaxWidth()
+            .background(backgroundColor)
+            .drawBehind {
+                val strokeWidth = 1 * density
+                val y = size.height - strokeWidth / 2
+
+                drawLine(
+                    Color.Red,
+                    Offset(0f, y),
+                    Offset(size.width, y),
+                    strokeWidth
+                )
+            }
+            .padding(5.dp)
+    ) {
+        Icon(
+            modifier = Modifier.weight(0.5f),
+            painter = painterResource(id = R.drawable.ic_arrow),
+            contentDescription = "arrowIcon",
+            tint = Color.Transparent
+        )
+        Text(
+            modifier = Modifier.weight(1f),
+            text = "Name",
+            fontSize = 24.sp
+        )
+        Text(
+            modifier = Modifier.weight(1f),
+            text = "Quantity",
+            fontSize = 24.sp
+        )
+        Text(
+            modifier = Modifier.weight(1f),
+            text = "Price",
             fontSize = 24.sp
         )
     }

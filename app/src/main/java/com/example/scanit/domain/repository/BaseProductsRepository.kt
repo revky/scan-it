@@ -5,5 +5,5 @@ import com.example.scanit.util.Response
 import kotlinx.coroutines.flow.Flow
 
 interface BaseProductsRepository {
-    fun getProducts(idReceipt: String) : Flow<Response<Product>>
+    fun getProducts(idReceipt: String) : Flow<Response<List<Product>>>
 }

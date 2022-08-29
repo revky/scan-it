@@ -26,37 +26,39 @@ fun ReceiptsTab(
     homeScreenNavController: NavController,
     viewModel: ReceiptsViewModel = hiltViewModel()
 ) {
-    Column {
+    Column(
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.Start,
+        modifier = Modifier.padding(10.dp)
+    ) {
         Text(
             text = "Your receipts.",
             fontSize = 24.sp
         )
-    }
 
-    when (val receiptsResponse = viewModel.receiptsState.collectAsState().value) {
-        is Response.Loading -> ProgressBar()
-        is Response.Success -> LazyColumn(
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.Start,
-            modifier = Modifier.padding(10.dp)
-        ) {
-            items(receiptsResponse.data ?: listOf()) { receipt ->
-                Receipt(
-                    onReceiptClick = {
-                        homeScreenNavController.navigate(ReceiptDetailsScreenDestination(receipt.id)) {
-                            launchSingleTop = true
-                        }
-                    },
-                    onDeleteClick = {
+        when (val receiptsResponse = viewModel.receiptsState.collectAsState().value) {
+            is Response.Loading -> ProgressBar()
+            is Response.Success -> LazyColumn(
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.Start
+            ) {
+                items(receiptsResponse.data ?: listOf()) { receipt ->
+                    Receipt(
+                        onReceiptClick = {
+                            homeScreenNavController.navigate(ReceiptDetailsScreenDestination(receipt.id)) {
+                                launchSingleTop = true
+                            }
+                        },
+                        onDeleteClick = {
 
-                    },
-                    receipt = receipt
-                )
+                        },
+                        receipt = receipt
+                    )
+                }
+            }
+            is Response.Failure -> {
+                //TODO TOAST ERROR
             }
         }
-        is Response.Failure -> {
-            //TODO TOAST ERROR
-        }
     }
-
 }

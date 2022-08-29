@@ -61,10 +61,12 @@ class ReceiptsRepositoryImpl @Inject constructor(
                         }
                     }
                     trySend(Response.Success(receipts)).isSuccess
+                    close()
                 }
             }
             .addOnFailureListener {
                 trySend(Response.Failure(it)).isFailure
+                close()
             }
         awaitClose()
     }

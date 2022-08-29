@@ -51,17 +51,17 @@ fun Product(
         Text(
             modifier = Modifier.weight(1f),
             text = product.name,
-            fontSize = 24.sp
+            fontSize = 18.sp
         )
         Text(
             modifier = Modifier.weight(1f),
             text = product.quantity.toString(),
-            fontSize = 24.sp
+            fontSize = 18.sp
         )
         Text(
             modifier = Modifier.weight(1f),
             text = "${product.price} zł",
-            fontSize = 24.sp
+            fontSize = 18.sp
         )
     }
 }
@@ -99,17 +99,17 @@ fun ProductHeader(
         Text(
             modifier = Modifier.weight(1f),
             text = "Name",
-            fontSize = 24.sp
+            fontSize = 18.sp
         )
         Text(
             modifier = Modifier.weight(1f),
             text = "Quantity",
-            fontSize = 24.sp
+            fontSize = 18.sp
         )
         Text(
             modifier = Modifier.weight(1f),
             text = "Price",
-            fontSize = 24.sp
+            fontSize = 18.sp
         )
     }
 }

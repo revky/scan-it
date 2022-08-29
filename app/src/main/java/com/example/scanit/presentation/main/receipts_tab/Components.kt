@@ -44,7 +44,7 @@ fun Receipt(
             Text(text = receipt.date.toLongDateString())
             Text(text = receipt.products.sumOf {
                 it.price
-            }.toString())
+            }.toString() + " zł")
             IconButton(
                 onClick = {
                     onDeleteClick()

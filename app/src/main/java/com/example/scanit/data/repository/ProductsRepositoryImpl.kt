@@ -32,10 +32,12 @@ class ProductsRepositoryImpl @Inject constructor(
                         }
                     }
                     trySend(Response.Success(products)).isSuccess
+                    close()
                 }
             }
             .addOnFailureListener {
                 trySend(Response.Failure(it)).isFailure
+                close()
             }
         awaitClose()
     }

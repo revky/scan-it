@@ -19,9 +19,11 @@ import com.example.scanit.R
 import com.example.scanit.presentation.NavGraphs
 import com.example.scanit.presentation.common.ConfirmCancelDialog
 import com.example.scanit.presentation.destinations.ReceiptsTabDestination
+import com.example.scanit.presentation.destinations.ScannerScreenDestination
 import com.example.scanit.presentation.destinations.SignInWithGoogleScreenDestination
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.navigation.navigate
 
 @com.ramcosta.composedestinations.annotation.Destination
 @Composable
@@ -94,7 +96,7 @@ fun HomeScreen(
             floatingActionButton = {
                 FloatingActionButton(
                     onClick = {
-                        //homeScreenNavController.navigate(CmaeraScreenDestination)
+                       homeScreenNavController.navigate(ScannerScreenDestination)
                     }
                 ) {
                     Icon(

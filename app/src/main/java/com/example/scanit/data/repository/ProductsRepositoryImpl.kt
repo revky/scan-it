@@ -1,9 +1,7 @@
 package com.example.scanit.data.repository
 
 import com.example.scanit.domain.model.Product
-import com.example.scanit.domain.model.Receipt
 import com.example.scanit.domain.repository.BaseProductsRepository
-import com.example.scanit.util.Constants
 import com.example.scanit.util.Constants.PRODUCTS_REF
 import com.example.scanit.util.Response
 import com.google.firebase.firestore.CollectionReference

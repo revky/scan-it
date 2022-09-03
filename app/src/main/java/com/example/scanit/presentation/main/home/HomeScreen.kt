@@ -1,6 +1,8 @@
 package com.example.scanit.presentation.main.home
 
+import android.net.Uri
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.FloatingActionButton
@@ -12,18 +14,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
+import com.canhub.cropper.CropImageContract
+import com.canhub.cropper.CropImageView
+import com.canhub.cropper.options
 import com.example.scanit.R
 import com.example.scanit.presentation.NavGraphs
 import com.example.scanit.presentation.common.ConfirmCancelDialog
 import com.example.scanit.presentation.destinations.ReceiptsTabDestination
-import com.example.scanit.presentation.destinations.ScannerScreenDestination
 import com.example.scanit.presentation.destinations.SignInWithGoogleScreenDestination
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.ramcosta.composedestinations.navigation.navigate
 
 @com.ramcosta.composedestinations.annotation.Destination
 @Composable
@@ -36,22 +40,27 @@ fun HomeScreen(
     }
 
     val homeScreenNavController = rememberNavController()
-//    val navBackStackEntry by homeScreenNavController.currentBackStackEntryAsState()
-//    val currentRoute = navBackStackEntry?.destination?.route?.substringBefore('?')
-//    val topBarState =
-//        !arrayOf(
-//            PROFILE_TAB,
-//            CAMERA_SCREEN
-//        ).any { it == currentRoute }
-//    viewModel.onTopBarChange(topBarState)
-//    val bottomBarState =
-//        !arrayOf(
-//            TRIP_DETAILS_SCREEN,
-//            TRIP_DAY_DETAILS_SCREEN,
-//            TRIP_EVENT_DETAILS_SCREEN,
-//            CAMERA_SCREEN
-//        ).any { it == currentRoute }
-//    viewModel.onBottomBarChange(bottomBarState)
+    val context = LocalContext.current
+    val imageCropLauncher =
+        rememberLauncherForActivityResult(contract = CropImageContract()) { result ->
+            if (result.isSuccessful) {
+                // use the cropped image
+                val resultImageUri = result.uriContent
+                val imageFilePath =
+                    result.getUriFilePath(context = context, uniqueName = true).toString()
+                if (resultImageUri?.scheme?.contains("content") == true) {
+                    // replace Scheme to file
+                    val builder = Uri.Builder()
+                    builder.scheme("file")
+                        .appendPath(imageFilePath)
+                    val imageUri = builder.build()
+                    // Use the imageUri then to send the file
+                }
+            } else {
+                // an error occurred cropping
+                val exception = result.error
+            }
+        }
 
     BackHandler(enabled = true) {
         logoutDialogState.value = !logoutDialogState.value
@@ -80,14 +89,14 @@ fun HomeScreen(
                     signOut = {
                         viewModel.signOut()
                         navigator.popBackStack("sign_in_with_google_screen", true)
-                        navigator.navigate(SignInWithGoogleScreenDestination){
+                        navigator.navigate(SignInWithGoogleScreenDestination) {
                             launchSingleTop = true
                         }
                     },
                     revokeAccess = {
                         viewModel.revokeAccess()
                         navigator.popBackStack("sign_in_with_google_screen", true)
-                        navigator.navigate(SignInWithGoogleScreenDestination){
+                        navigator.navigate(SignInWithGoogleScreenDestination) {
                             launchSingleTop = true
                         }
                     }
@@ -96,7 +105,13 @@ fun HomeScreen(
             floatingActionButton = {
                 FloatingActionButton(
                     onClick = {
-                       homeScreenNavController.navigate(ScannerScreenDestination)
+                        imageCropLauncher.launch(options {
+                            setImageSource(
+                                includeGallery = true,
+                                includeCamera = true,
+                            ); setGuidelines(CropImageView.Guidelines.ON_TOUCH)
+                            setActivityTitle("Send image")
+                        })
                     }
                 ) {
                     Icon(

@@ -35,7 +35,7 @@ enum class BottomBarDestination(
 }
 
 @Composable
-fun TopBar(
+fun HomeTopBar(
     signOut: () -> Unit,
     revokeAccess: () -> Unit
 ) {
@@ -89,7 +89,7 @@ fun MyDropdownMenu(
 }
 
 @Composable
-fun BottomBar(
+fun HomeBottomBar(
     navController: NavController
 ) {
     val currentDestination: com.example.scanit.presentation.destinations.Destination =

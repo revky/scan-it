@@ -41,13 +41,7 @@ class FirebaseAuthRepositoryImpl @Inject constructor(
     override fun firebaseSignInWithGoogle(googleCredential: AuthCredential) = flow {
         try {
             emit(Response.Loading)
-            val authResult = auth.signInWithCredential(googleCredential).await()
-//            val isNewUser = authResult.additionalUserInfo?.isNewUser ?: false
-//            if (isNewUser) {
-//                auth.currentUser?.apply {
-//                    db.collection(USERS_REF).document(uid).set(toUser()).await()
-//                }
-//            }
+            auth.signInWithCredential(googleCredential).await()
             emit(Response.Success(true))
         } catch (e: Exception) {
             emit(Response.Failure(e))

@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
@@ -24,6 +25,7 @@ import com.canhub.cropper.options
 import com.example.scanit.R
 import com.example.scanit.presentation.NavGraphs
 import com.example.scanit.presentation.common.ConfirmCancelDialog
+import com.example.scanit.presentation.destinations.ReceiptFormScreenDestination
 import com.example.scanit.presentation.destinations.ReceiptsTabDestination
 import com.example.scanit.presentation.destinations.SignInWithGoogleScreenDestination
 import com.ramcosta.composedestinations.DestinationsNavHost
@@ -54,7 +56,7 @@ fun HomeScreen(
                     builder.scheme("file")
                         .appendPath(imageFilePath)
                     val imageUri = builder.build()
-                    // Use the imageUri then to send the file
+                    navigator.navigate(ReceiptFormScreenDestination)
                 }
             } else {
                 // an error occurred cropping
@@ -85,7 +87,7 @@ fun HomeScreen(
         Scaffold(
             backgroundColor = Color.Transparent,
             topBar = {
-                TopBar(
+                HomeTopBar(
                     signOut = {
                         viewModel.signOut()
                         navigator.popBackStack("sign_in_with_google_screen", true)
@@ -121,10 +123,14 @@ fun HomeScreen(
                 }
             },
             bottomBar = {
-                BottomBar(navController = homeScreenNavController)
+                HomeBottomBar(navController = homeScreenNavController)
             }
         ) {
-            Column(modifier = Modifier.padding(it)) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(it)
+            ) {
                 DestinationsNavHost(
                     navGraph = NavGraphs.root,
                     navController = homeScreenNavController,

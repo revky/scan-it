@@ -11,11 +11,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import java.lang.Exception
 import javax.inject.Inject
 
 class ReceiptsRepositoryImpl @Inject constructor(
@@ -71,11 +70,23 @@ class ReceiptsRepositoryImpl @Inject constructor(
         awaitClose()
     }
 
-    override fun addReceipt(receiptMap: Map<String, Any>): Flow<Response<Boolean>> {
-        TODO("Not yet implemented")
+    override fun addReceipt(receiptMap: Map<String, Any>): Flow<Response<Boolean>> = flow{
+        try{
+            emit(Response.Loading)
+            receiptsRef.add(receiptMap).await()
+            emit(Response.Success(true))
+        } catch (e: Exception) {
+            emit(Response.Failure(e))
+        }
     }
 
-    override fun deleteReceipt(receiptId: String): Flow<Response<Boolean>> {
-        TODO("Not yet implemented")
+    override fun deleteReceipt(receiptId: String): Flow<Response<Boolean>> = flow{
+        try{
+            emit(Response.Loading)
+            receiptsRef.document(receiptId).delete().await()
+            emit(Response.Success(true))
+        } catch (e: Exception) {
+            emit(Response.Failure(e))
+        }
     }
 }

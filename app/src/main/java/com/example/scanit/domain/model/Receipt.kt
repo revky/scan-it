@@ -4,6 +4,7 @@ import java.util.*
 
 data class Receipt(
     var id: String = "",
+    var idOwner: String = "",
     var date: Date = Date(),
     var products: List<Product> = listOf(),
 )

@@ -50,9 +50,10 @@ fun ReceiptsTab(
                             }
                         },
                         onDeleteClick = {
-
+                            viewModel.deleteReceipt(receipt)
                         },
-                        receipt = receipt
+                        receipt = receipt,
+
                     )
                 }
             }
@@ -62,3 +63,4 @@ fun ReceiptsTab(
         }
     }
 }
+

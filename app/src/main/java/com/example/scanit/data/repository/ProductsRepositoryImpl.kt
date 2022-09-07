@@ -39,4 +39,8 @@ class ProductsRepositoryImpl @Inject constructor(
             }
         awaitClose()
     }
+
+    override fun addProduct(): Flow<Response<Boolean>> {
+        TODO("Not yet implemented")
+    }
 }

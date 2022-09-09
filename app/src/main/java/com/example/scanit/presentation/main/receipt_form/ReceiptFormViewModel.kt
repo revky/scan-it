@@ -27,12 +27,12 @@ class ReceiptFormViewModel @Inject constructor(
             listOf(
                 Product("", "BULKI MLECZNE", 1, 569),
                 Product("", "CHLEB RAZOWY", 1, 289),
-                Product("", "BULKI MLECZNE", 1, 569),
-                Product("", "BULKI MLECZNE", 1, 569),
-                Product("", "BULKI MLECZNE", 1, 569),
-                Product("", "BULKI MLECZNE", 1, 569),
-                Product("", "BULKI MLECZNE", 1, 569),
-                Product("", "BULKI MLECZNE", 1, 569),
+                Product("", "CIAST OWSIA/SEZ", 1, 259),
+                Product("", "BUŁKA KAJZERKA", 7, 210),
+                Product("", "RZODKIEWKA", 1, 199),
+                Product("", "KIELBASA KRAKOWSA", 1, 399),
+                Product("", "SALATA LODOWA", 1, 499),
+                Product("", "REKLAMOWKA", 1, 49),
             )
         )
     )

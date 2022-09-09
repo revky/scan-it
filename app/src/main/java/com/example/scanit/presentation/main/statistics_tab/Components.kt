@@ -34,8 +34,8 @@ fun Statistics(
                 .padding(horizontal = 10.dp)
         ) {
             Text(text = groupedProduct.name, modifier = Modifier.weight(1f))
-            Text(text = groupedProduct.quantity.toString(), modifier = Modifier.weight(1f))
-            Text(text = groupedProduct.price.toString(), modifier = Modifier.weight(1f))
+            Text(text = "${groupedProduct.quantity} szt.", modifier = Modifier.weight(1f))
+            Text(text = "${groupedProduct.price.toDouble()/100} zł", modifier = Modifier.weight(1f))
         }
     }
 }

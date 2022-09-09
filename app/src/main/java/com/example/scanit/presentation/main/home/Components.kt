@@ -30,7 +30,7 @@ enum class BottomBarDestination(
     Statistics(
         StatisticsTabDestination,
         "Statistics",
-        R.drawable.ic_receipt
+        R.drawable.ic_barchart
     ),
 }
 

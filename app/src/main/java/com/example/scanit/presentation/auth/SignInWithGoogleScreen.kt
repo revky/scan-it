@@ -43,7 +43,7 @@ fun SignInWithGoogleScreen(
             modifier = Modifier.fillMaxSize()
         ) {
             Image(
-                painter = painterResource(id = R.drawable.app_logo),
+                painter = painterResource(id = R.drawable.app_logo_2),
                 contentDescription = "SignInImage",
                 contentScale = ContentScale.Fit,
                 modifier = Modifier

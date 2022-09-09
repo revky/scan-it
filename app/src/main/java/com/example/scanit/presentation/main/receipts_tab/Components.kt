@@ -43,7 +43,7 @@ fun Receipt(
             Text(text = receipt.date.toDayOfTheWeek())
             Text(text = receipt.date.toLongDateString())
             Text(text = receipt.products.sumOf {
-                it.price
+                it.price.toDouble() / 100
             }.toString() + " zł")
             IconButton(
                 onClick = {

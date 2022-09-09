@@ -22,8 +22,8 @@ fun ProductEdit(
     product: Product
 ) {
     var name by remember { mutableStateOf(product.name) }
-    var qu by remember { mutableStateOf(product.quantity.toString()) }
-    var price by remember { mutableStateOf(product.price.toString()) }
+    var qu by remember { mutableStateOf("${product.quantity}") }
+    var price by remember { mutableStateOf("${product.price.toDouble()/100}") }
 
     Card(
         modifier = modifier

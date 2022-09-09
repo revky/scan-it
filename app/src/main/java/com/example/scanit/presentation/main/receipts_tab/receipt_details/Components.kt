@@ -59,7 +59,7 @@ fun Product(
         )
         Text(
             modifier = Modifier.weight(1f),
-            text = "${product.price} zł",
+            text = "${product.price.toDouble()/100} zł",
             fontSize = 18.sp
         )
     }

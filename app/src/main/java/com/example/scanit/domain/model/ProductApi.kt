@@ -9,7 +9,7 @@ data class ProductApi(
     @Json(name = "name")
     val name: String,
     @Json(name = "price")
-    val price: String,
+    val price: Double,
     @Json(name = "quantity")
     val quantity: Int
 )

@@ -2,13 +2,11 @@ package com.example.scanit.di
 
 import android.app.Application
 import android.content.Context
+import com.example.scanit.data.repository.ApiRepositoryImpl
 import com.example.scanit.data.repository.FirebaseAuthRepositoryImpl
 import com.example.scanit.data.repository.ProductsRepositoryImpl
 import com.example.scanit.data.repository.ReceiptsRepositoryImpl
-import com.example.scanit.domain.repository.BaseAuthRepository
-import com.example.scanit.domain.repository.BaseProductsRepository
-import com.example.scanit.domain.repository.BaseReceiptsRepository
-import com.example.scanit.domain.repository.RetrofitApiRepository
+import com.example.scanit.domain.repository.*
 import com.example.scanit.util.Constants
 import com.example.scanit.util.Constants.FIREBASE_GOOGLE_AUTH_CLIENT_ID
 import com.example.scanit.util.Constants.RECEIPTS_REF
@@ -32,7 +30,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Named
 import javax.inject.Singleton
@@ -137,17 +134,15 @@ object AppModule {
         receiptsRef: CollectionReference
     ): BaseProductsRepository = ProductsRepositoryImpl(receiptsRef)
 
-
-    @Provides
     @Singleton
+    @Provides
     fun provideApi(builder: Retrofit.Builder): RetrofitApiRepository {
         return builder
             .build()
             .create(RetrofitApiRepository::class.java)
     }
-
-    @Provides
     @Singleton
+    @Provides
     fun provideRetrofit(): Retrofit.Builder {
         return Retrofit.Builder()
             .baseUrl(Constants.SERVER_URL)

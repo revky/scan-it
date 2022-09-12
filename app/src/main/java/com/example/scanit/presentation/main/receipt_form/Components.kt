@@ -14,16 +14,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.scanit.R
 import com.example.scanit.domain.model.Product
+import com.example.scanit.domain.model.ProductApi
 
 @Composable
 fun ProductEdit(
     modifier: Modifier = Modifier,
     onDeleteClick: () -> Unit,
-    product: Product
+    product: ProductApi
 ) {
     var name by remember { mutableStateOf(product.name) }
     var qu by remember { mutableStateOf("${product.quantity}") }
-    var price by remember { mutableStateOf("${product.price.toDouble()/100}") }
+    var price by remember { mutableStateOf("${product.price}") }
 
     Card(
         modifier = modifier

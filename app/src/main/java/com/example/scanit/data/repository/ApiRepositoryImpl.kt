@@ -1,11 +1,11 @@
 package com.example.scanit.data.repository
 
 import com.example.scanit.domain.model.ProductApi
+import com.example.scanit.domain.repository.BaseApiRepository
 import com.example.scanit.domain.repository.RetrofitApiRepository
 import com.example.scanit.util.Response
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -14,8 +14,8 @@ import javax.inject.Inject
 
 class ApiRepositoryImpl @Inject constructor(
     private val apiRepository: RetrofitApiRepository
-) {
-    suspend fun uploadImage(file: File) = flow {
+):BaseApiRepository {
+    override fun uploadImage(file: File): Flow<Response<List<ProductApi>>> = flow {
         try {
             emit(Response.Loading)
             val result = apiRepository.uploadPicture(
@@ -31,11 +31,7 @@ class ApiRepositoryImpl @Inject constructor(
             emit(Response.Failure(e))
         }
     }
-
-    private var _receiptsState: MutableStateFlow<Response<List<ProductApi>>> =
+    override var imageUploadState: MutableStateFlow<Response<List<ProductApi>>> =
         MutableStateFlow(Response.Loading)
 
-    val receiptsState: StateFlow<Response<List<ProductApi>>>
-        get() = _receiptsState
 }
-

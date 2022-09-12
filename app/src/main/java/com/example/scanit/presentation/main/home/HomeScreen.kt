@@ -10,10 +10,7 @@ import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -27,8 +24,6 @@ import com.canhub.cropper.options
 import com.example.scanit.R
 import com.example.scanit.presentation.NavGraphs
 import com.example.scanit.presentation.common.ConfirmCancelDialog
-import com.example.scanit.presentation.common.ProgressBar
-import com.example.scanit.presentation.destinations.HomeScreenDestination
 import com.example.scanit.presentation.destinations.ReceiptFormScreenDestination
 import com.example.scanit.presentation.destinations.ReceiptsTabDestination
 import com.example.scanit.presentation.destinations.SignInWithGoogleScreenDestination
@@ -145,7 +140,7 @@ fun HomeScreen(
             }
         }
     }
-    when (val imageUploadResponse = viewModel.imageUploadResponse) {
+    when (val imageUploadResponse = viewModel.uploadImageStateVM.collectAsState().value) {
         is Response.Loading -> {}
         is Response.Success -> navigator.navigate(ReceiptFormScreenDestination)
         is Response.Failure -> LaunchedEffect(Unit) {

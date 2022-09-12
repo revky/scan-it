@@ -1,12 +1,12 @@
 package com.example.scanit.presentation.main.home
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.scanit.data.repository.ApiRepositoryImpl
-import com.example.scanit.domain.model.ProductApi
 import com.example.scanit.domain.repository.BaseAuthRepository
 import com.example.scanit.util.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,13 +20,9 @@ class HomeViewModel @Inject constructor(
     private var apiRepository: ApiRepositoryImpl
 
 ) : ViewModel() {
-    var signOutResponse by mutableStateOf<Response<Boolean>>(Response.Success(false))
-        private set
-    var revokeAccessResponse by mutableStateOf<Response<Boolean>>(Response.Success(false))
-        private set
-
-    var imageUploadResponse = apiRepository.receiptsState
-
+    private var signOutResponse by mutableStateOf<Response<Boolean>>(Response.Success(false))
+    private var revokeAccessResponse by mutableStateOf<Response<Boolean>>(Response.Success(false))
+    var uploadImageStateVM = apiRepository.imageUploadState
 
     fun signOut() = viewModelScope.launch {
         repository.signOut().collect {
@@ -42,7 +38,9 @@ class HomeViewModel @Inject constructor(
 
     fun uploadImage(file: File) = viewModelScope.launch {
         apiRepository.uploadImage(file).collect {
-
+            uploadImageStateVM.value = it
+            apiRepository.imageUploadState.value = it
+            Log.e("tag",apiRepository.imageUploadState.value.toString())
         }
     }
 }

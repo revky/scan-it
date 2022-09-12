@@ -10,8 +10,6 @@ import com.example.scanit.domain.repository.BaseAuthRepository
 import com.example.scanit.util.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import javax.inject.Inject
 
@@ -38,14 +36,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun readProducts(file: File) = viewModelScope.launch {
-        apiRepository.readProducts(
-            image = MultipartBody.Part
-                .createFormData(
-                    "post_image",
-                    file.name,
-                    file.asRequestBody()
-                )
-        )
+    fun uploadImage(file: File) = viewModelScope.launch {
+        apiRepository.uploadImage(file)
     }
 }

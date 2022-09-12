@@ -59,7 +59,7 @@ fun HomeScreen(
                         .appendPath(imageFilePath)
                     val imageUri = builder.build()
                     val file: File = imageUri.toFile()
-                    viewModel.readProducts(file)
+                    viewModel.uploadImage(file)
                     navigator.navigate(ReceiptFormScreenDestination)
                 }
             } else {

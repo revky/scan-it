@@ -1,30 +1,28 @@
 package com.example.scanit.data.repository
 
-import com.example.scanit.domain.repository.BaseApiRepository
 import com.example.scanit.domain.repository.RetrofitApiRepository
 import com.example.scanit.util.Response
 import okhttp3.MultipartBody
-import retrofit2.HttpException
+import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.File
 import javax.inject.Inject
 
 class ApiRepositoryImpl @Inject constructor(
     private val apiRepository: RetrofitApiRepository
-) : BaseApiRepository {
-    override suspend fun readProducts(image: MultipartBody.Part): Response<Any> {
+){
+    suspend fun uploadImage(file: File):Boolean{
         return try {
-            val response = apiRepository.readProducts(image)
-            val result = response.body()
-
-            if (response.isSuccessful) {
-                if (result != null){
-                    _productsResponse = Response.Success(result)
-                }
-                Response.Success(true)
-            } else {
-                throw HttpException(response)
-            }
-        } catch (e: Exception) {
-            Response.Failure(e)
+            apiRepository.uploadPicture(
+                image = MultipartBody.Part
+                    .createFormData(
+                        "image",
+                        file.name,
+                        file.asRequestBody()
+                    )
+            )
+            true
+        }catch (e: Exception){
+            false
         }
     }
 

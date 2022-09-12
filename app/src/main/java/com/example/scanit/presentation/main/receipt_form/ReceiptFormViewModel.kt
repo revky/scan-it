@@ -1,6 +1,5 @@
 package com.example.scanit.presentation.main.receipt_form
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.scanit.data.repository.ApiRepositoryImpl
@@ -26,7 +25,7 @@ class ReceiptFormViewModel @Inject constructor(
     private val receiptsRepository: BaseReceiptsRepository
 ) : ViewModel() {
 
-    private val _imageUploadState: MutableStateFlow<Response<List<ProductApi>>> =
+    private var _imageUploadState: MutableStateFlow<Response<List<ProductApi>>> =
         MutableStateFlow(Response.Loading)
 
     val imageUploadState: StateFlow<Response<List<ProductApi>>>
@@ -43,7 +42,15 @@ class ReceiptFormViewModel @Inject constructor(
     fun uploadImage(file: File) = viewModelScope.launch {
         apiRepository.uploadImage(file).collect {
             _imageUploadState.value = it
-            Log.e("tag",_imageUploadState.value.toString())
         }
+    }
+
+    fun deleteProduct(productApi: ProductApi): Boolean {
+        if (_imageUploadState.value is Response.Success<List<ProductApi>>)
+            _imageUploadState.value = (_imageUploadState.value as Response.Success<List<ProductApi>>).data?.toMutableList()?.also {
+                it?.remove(productApi)
+                Response.Success(it)
+            }
+        return true
     }
 }

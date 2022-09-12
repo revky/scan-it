@@ -13,13 +13,13 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.scanit.R
-import com.example.scanit.domain.model.Product
 import com.example.scanit.domain.model.ProductApi
 
 @Composable
 fun ProductEdit(
     modifier: Modifier = Modifier,
-    product: ProductApi
+    product: ProductApi,
+    onDelete: (ProductApi) -> Boolean
 ) {
     var name by remember { mutableStateOf(product.name) }
     var qu by remember { mutableStateOf("${product.quantity}") }
@@ -99,7 +99,7 @@ fun ProductEdit(
                 IconButton(
                     modifier = Modifier.weight(0.2f),
                     onClick = {
-
+                        onDelete(product)
                     }
                 ) {
                     Icon(
@@ -123,13 +123,13 @@ fun ReceiptFormTopBar(
             Text(text = "Scan It!")
         },
         actions = {
-            IconButton(onClick = { saveReceipt }) {
+            IconButton(onClick = saveReceipt) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_save),
                     contentDescription = "menuIcon"
                 )
             }
-            IconButton(onClick = { addProduct }) {
+            IconButton(onClick = addProduct) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_add),
                     contentDescription = "menuIcon"

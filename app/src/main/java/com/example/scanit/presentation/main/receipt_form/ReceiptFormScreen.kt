@@ -1,6 +1,5 @@
 package com.example.scanit.presentation.main.receipt_form
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -50,7 +49,6 @@ fun ReceiptFormScreen(
                     .padding(10.dp)
                     .fillMaxHeight()
             ) {
-                Log.e("tag",viewModel.imageUploadState.collectAsState().value.toString())
                 when (val receiptsResponse = viewModel.imageUploadState.collectAsState().value) {
                     is Response.Loading -> ProgressBar()
                     is Response.Success -> LazyColumn(
@@ -65,7 +63,12 @@ fun ReceiptFormScreen(
                             )
                         }
                         items(receiptsResponse.data ?: listOf()) { product ->
-                            ProductEdit(product = product)
+                            ProductEdit(
+                                product = product,
+                                onDelete = { productApi ->
+                                    viewModel.deleteProduct(productApi)
+                                }
+                            )
                         }
                     }
                     is Response.Failure -> {

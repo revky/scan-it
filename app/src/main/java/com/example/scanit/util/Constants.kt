@@ -20,6 +20,6 @@ object Constants {
     const val USER_ID = "idOwner"
 
     //API
-    const val SERVER_URL = "http://10.7.1.78:5000/"
+    const val SERVER_URL = "http://192.168.35.34:5000/"
     const val ENDPOINT = "read_products"
 }

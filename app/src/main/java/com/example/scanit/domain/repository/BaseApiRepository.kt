@@ -9,6 +9,4 @@ import java.io.File
 
 interface BaseApiRepository {
     fun uploadImage(file: File): Flow<Response<List<ProductApi>>>
-
-    val imageUploadState: StateFlow<Response<List<ProductApi>>>
 }

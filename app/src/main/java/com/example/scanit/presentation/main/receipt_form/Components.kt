@@ -19,7 +19,6 @@ import com.example.scanit.domain.model.ProductApi
 @Composable
 fun ProductEdit(
     modifier: Modifier = Modifier,
-    onDeleteClick: () -> Unit,
     product: ProductApi
 ) {
     var name by remember { mutableStateOf(product.name) }
@@ -100,7 +99,7 @@ fun ProductEdit(
                 IconButton(
                     modifier = Modifier.weight(0.2f),
                     onClick = {
-                        onDeleteClick()
+
                     }
                 ) {
                     Icon(

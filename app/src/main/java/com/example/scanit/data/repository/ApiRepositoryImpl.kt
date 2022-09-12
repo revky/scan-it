@@ -31,7 +31,4 @@ class ApiRepositoryImpl @Inject constructor(
             emit(Response.Failure(e))
         }
     }
-    override var imageUploadState: MutableStateFlow<Response<List<ProductApi>>> =
-        MutableStateFlow(Response.Loading)
-
 }

@@ -19,13 +19,16 @@ import com.example.scanit.presentation.common.ProgressBar
 import com.example.scanit.util.Response
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import java.io.File
 
 @Destination
 @Composable
 fun ReceiptFormScreen(
     navigator: DestinationsNavigator,
-    viewModel: ReceiptFormViewModel = hiltViewModel()
+    viewModel: ReceiptFormViewModel = hiltViewModel(),
+    file: File
 ) {
+    viewModel.uploadImage(file)
     Surface(modifier = Modifier.fillMaxSize()) {
         Scaffold(
             backgroundColor = Color.Transparent,
@@ -62,7 +65,7 @@ fun ReceiptFormScreen(
                             )
                         }
                         items(receiptsResponse.data ?: listOf()) { product ->
-                            ProductEdit(onDeleteClick = {}, product = product)
+                            ProductEdit(product = product)
                         }
                     }
                     is Response.Failure -> {

@@ -58,7 +58,7 @@ fun HomeScreen(
                         .appendPath(imageFilePath)
                     val imageUri = builder.build()
                     val file: File = imageUri.toFile()
-                    viewModel.uploadImage(file)
+                    navigator.navigate(ReceiptFormScreenDestination(file = file))
                 }
             } else {
                 result.error
@@ -140,11 +140,12 @@ fun HomeScreen(
             }
         }
     }
-    when (val imageUploadResponse = viewModel.uploadImageStateVM.collectAsState().value) {
-        is Response.Loading -> {}
-        is Response.Success -> navigator.navigate(ReceiptFormScreenDestination)
-        is Response.Failure -> LaunchedEffect(Unit) {
-            print(imageUploadResponse.e)
-        }
-    }
 }
+//    when (val imageUploadResponse = viewModel.uploadImageStateVM.collectAsState().value) {
+//        is Response.Loading -> {}
+//        is Response.Success -> navigator.navigate(ReceiptFormScreenDestination, uri)
+//        is Response.Failure -> LaunchedEffect(Unit) {
+//            print(imageUploadResponse.e)
+//        }
+//    }
+//}

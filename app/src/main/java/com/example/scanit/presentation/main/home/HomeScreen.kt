@@ -11,6 +11,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -26,9 +27,12 @@ import com.canhub.cropper.options
 import com.example.scanit.R
 import com.example.scanit.presentation.NavGraphs
 import com.example.scanit.presentation.common.ConfirmCancelDialog
+import com.example.scanit.presentation.common.ProgressBar
+import com.example.scanit.presentation.destinations.HomeScreenDestination
 import com.example.scanit.presentation.destinations.ReceiptFormScreenDestination
 import com.example.scanit.presentation.destinations.ReceiptsTabDestination
 import com.example.scanit.presentation.destinations.SignInWithGoogleScreenDestination
+import com.example.scanit.util.Response
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import java.io.File
@@ -60,7 +64,6 @@ fun HomeScreen(
                     val imageUri = builder.build()
                     val file: File = imageUri.toFile()
                     viewModel.uploadImage(file)
-                    navigator.navigate(ReceiptFormScreenDestination)
                 }
             } else {
                 result.error
@@ -140,6 +143,13 @@ fun HomeScreen(
                     startRoute = ReceiptsTabDestination
                 )
             }
+        }
+    }
+    when (val imageUploadResponse = viewModel.imageUploadResponse) {
+        is Response.Loading -> {}
+        is Response.Success -> navigator.navigate(ReceiptFormScreenDestination)
+        is Response.Failure -> LaunchedEffect(Unit) {
+            print(imageUploadResponse.e)
         }
     }
 }

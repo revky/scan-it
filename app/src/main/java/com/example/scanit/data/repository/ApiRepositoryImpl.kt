@@ -4,9 +4,8 @@ import com.example.scanit.domain.model.ProductApi
 import com.example.scanit.domain.repository.BaseApiRepository
 import com.example.scanit.domain.repository.RetrofitApiRepository
 import com.example.scanit.util.Response
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.StateFlow
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
@@ -14,10 +13,13 @@ import javax.inject.Inject
 
 class ApiRepositoryImpl @Inject constructor(
     private val apiRepository: RetrofitApiRepository
-):BaseApiRepository {
-    override fun uploadImage(file: File): Flow<Response<List<ProductApi>>> = flow {
-        try {
-            emit(Response.Loading)
+) : BaseApiRepository {
+    private val _imageUploadState: MutableStateFlow<Response<List<ProductApi>>> = MutableStateFlow(Response.Loading)
+    override val uploadImageState: StateFlow<Response<List<ProductApi>>>
+        get() = _imageUploadState
+
+    override suspend fun uploadImage(file: File): Boolean {
+        return try {
             val result = apiRepository.uploadPicture(
                 image = MultipartBody.Part
                     .createFormData(
@@ -26,12 +28,10 @@ class ApiRepositoryImpl @Inject constructor(
                         file.asRequestBody()
                     )
             ).body()
-            emit(Response.Success(result))
+            _imageUploadState.value = Response.Success(result)
+            true
         } catch (e: Exception) {
-            emit(Response.Failure(e))
+            false
         }
     }
-    override var imageUploadState: MutableStateFlow<Response<List<ProductApi>>> =
-        MutableStateFlow(Response.Loading)
-
 }

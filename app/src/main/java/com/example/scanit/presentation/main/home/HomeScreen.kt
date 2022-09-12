@@ -10,7 +10,9 @@ import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -27,9 +29,9 @@ import com.example.scanit.presentation.common.ConfirmCancelDialog
 import com.example.scanit.presentation.destinations.ReceiptFormScreenDestination
 import com.example.scanit.presentation.destinations.ReceiptsTabDestination
 import com.example.scanit.presentation.destinations.SignInWithGoogleScreenDestination
-import com.example.scanit.util.Response
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.navigation.navigate
 import java.io.File
 
 @com.ramcosta.composedestinations.annotation.Destination
@@ -41,6 +43,8 @@ fun HomeScreen(
     val logoutDialogState = remember {
         mutableStateOf(false)
     }
+
+    var uploadResult: Boolean? = null
 
     val homeScreenNavController = rememberNavController()
     val context = LocalContext.current
@@ -58,7 +62,8 @@ fun HomeScreen(
                         .appendPath(imageFilePath)
                     val imageUri = builder.build()
                     val file: File = imageUri.toFile()
-                    viewModel.uploadImage(file)
+                    //TODO kod leci dalej zanim zdąży zebrać ten result i jest dalej null zamiast true/false
+                    uploadResult = viewModel.uploadImage(file)
                 }
             } else {
                 result.error
@@ -115,6 +120,8 @@ fun HomeScreen(
                             ); setGuidelines(CropImageView.Guidelines.ON_TOUCH)
                             setActivityTitle("Send image")
                         })
+                        if (uploadResult == true)
+                            homeScreenNavController.navigate(ReceiptFormScreenDestination)
                     }
                 ) {
                     Icon(
@@ -138,13 +145,6 @@ fun HomeScreen(
                     startRoute = ReceiptsTabDestination
                 )
             }
-        }
-    }
-    when (val imageUploadResponse = viewModel.uploadImageStateVM.collectAsState().value) {
-        is Response.Loading -> {}
-        is Response.Success -> navigator.navigate(ReceiptFormScreenDestination)
-        is Response.Failure -> LaunchedEffect(Unit) {
-            print(imageUploadResponse.e)
         }
     }
 }

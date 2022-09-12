@@ -30,7 +30,3 @@ fun Product.toMap(): Map<String, Any> {
         "price" to this.price
     )
 }
-//
-//
-//val tripDays = currentTrip?.tripDays?.sortedBy { tripDay -> tripDay.date }
-//items(tripDays ?: listOf()) { tripDay ->

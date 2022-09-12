@@ -19,11 +19,3 @@ interface BaseReceiptsRepository {
 
     fun deleteReceipt(receiptId: String): Flow<Response<Boolean>>
 }
-
-
-
-//
-//
-//val listOfReceipts = listOf<Receipt>().forEach{
-//       it.products = repo.getProducts(it.id)
-//}

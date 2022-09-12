@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.core.net.toFile
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import com.canhub.cropper.CropImageContract
@@ -30,6 +31,7 @@ import com.example.scanit.presentation.destinations.ReceiptsTabDestination
 import com.example.scanit.presentation.destinations.SignInWithGoogleScreenDestination
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import java.io.File
 
 @com.ramcosta.composedestinations.annotation.Destination
 @Composable
@@ -56,11 +58,12 @@ fun HomeScreen(
                     builder.scheme("file")
                         .appendPath(imageFilePath)
                     val imageUri = builder.build()
+                    val file: File = imageUri.toFile()
+                    viewModel.readProducts(file)
                     navigator.navigate(ReceiptFormScreenDestination)
                 }
             } else {
-                // an error occurred cropping
-                val exception = result.error
+                result.error
             }
         }
 

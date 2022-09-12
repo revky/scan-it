@@ -8,6 +8,4 @@ interface BaseProductsRepository {
     fun getProducts(idReceipt: String): Flow<Response<List<Product>>>
 
     fun addProduct(): Flow<Response<Boolean>>
-
-
 }

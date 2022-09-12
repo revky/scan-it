@@ -2,6 +2,7 @@ package com.example.scanit.presentation.main.receipt_form
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.scanit.data.repository.ApiRepositoryImpl
 import com.example.scanit.domain.model.Product
 import com.example.scanit.domain.model.Receipt
 import com.example.scanit.domain.repository.BaseReceiptsRepository
@@ -18,7 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ReceiptFormViewModel @Inject constructor(
-    // retrofit repo
+    private val apiRepository: ApiRepositoryImpl,
     private val user : FirebaseUser?,
     private val receiptsRepository : BaseReceiptsRepository
 ) : ViewModel() {

@@ -8,6 +8,8 @@ import com.example.scanit.data.repository.ReceiptsRepositoryImpl
 import com.example.scanit.domain.repository.BaseAuthRepository
 import com.example.scanit.domain.repository.BaseProductsRepository
 import com.example.scanit.domain.repository.BaseReceiptsRepository
+import com.example.scanit.domain.repository.RetrofitApiRepository
+import com.example.scanit.util.Constants
 import com.example.scanit.util.Constants.FIREBASE_GOOGLE_AUTH_CLIENT_ID
 import com.example.scanit.util.Constants.RECEIPTS_REF
 import com.example.scanit.util.Constants.SIGN_IN_REQ
@@ -29,6 +31,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import retrofit2.Retrofit
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -130,5 +133,21 @@ object AppModule {
     @Provides
     fun provideProductsRepository(
         receiptsRef: CollectionReference
-    ) : BaseProductsRepository = ProductsRepositoryImpl(receiptsRef)
+    ): BaseProductsRepository = ProductsRepositoryImpl(receiptsRef)
+
+
+    @Provides
+    @Singleton
+    fun provideApi(builder: Retrofit.Builder): RetrofitApiRepository {
+        return builder
+            .build()
+            .create(RetrofitApiRepository::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideRetrofit(): Retrofit.Builder {
+        return Retrofit.Builder()
+            .baseUrl(Constants.SERVER_URL)
+    }
 }

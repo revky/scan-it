@@ -34,7 +34,7 @@ fun ReceiptFormScreen(
             topBar = {
                 ReceiptFormTopBar(
                     saveReceipt = {},
-                    addProduct = {}
+                    addProduct = {viewModel.addProduct()}
                 )
             },
             bottomBar = {
@@ -49,7 +49,7 @@ fun ReceiptFormScreen(
                     .padding(10.dp)
                     .fillMaxHeight()
             ) {
-                when (val receiptsResponse = viewModel.imageUploadState.collectAsState().value) {
+                when (viewModel.imageUploadState.collectAsState().value) {
                     is Response.Loading -> ProgressBar()
                     is Response.Success -> LazyColumn(
                         verticalArrangement = Arrangement.Top,
@@ -62,13 +62,13 @@ fun ReceiptFormScreen(
                                 modifier = Modifier.padding(bottom = 10.dp)
                             )
                         }
-                        items(receiptsResponse.data ?: listOf()) { product ->
+
+                        items(viewModel.products) { product ->
                             ProductEdit(
-                                product = product,
-                                onDelete = { productApi ->
-                                    viewModel.deleteProduct(productApi)
-                                }
-                            )
+                                product = product
+                            ) { product ->
+                                viewModel.deleteProduct(product)
+                            }
                         }
                     }
                     is Response.Failure -> {

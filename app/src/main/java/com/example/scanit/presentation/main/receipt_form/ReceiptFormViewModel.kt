@@ -1,9 +1,12 @@
 package com.example.scanit.presentation.main.receipt_form
 
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.scanit.data.repository.ApiRepositoryImpl
-import com.example.scanit.domain.model.ProductApi
+import com.example.scanit.domain.model.Product
 import com.example.scanit.domain.model.Receipt
 import com.example.scanit.domain.repository.BaseReceiptsRepository
 import com.example.scanit.util.Response
@@ -25,11 +28,14 @@ class ReceiptFormViewModel @Inject constructor(
     private val receiptsRepository: BaseReceiptsRepository
 ) : ViewModel() {
 
-    private var _imageUploadState: MutableStateFlow<Response<List<ProductApi>>> =
+    private val _imageUploadState: MutableStateFlow<Response<Boolean>> =
         MutableStateFlow(Response.Loading)
-
-    val imageUploadState: StateFlow<Response<List<ProductApi>>>
+    val imageUploadState: StateFlow<Response<Boolean>>
         get() = _imageUploadState
+
+    private var _products: SnapshotStateList<Product> = mutableStateListOf()
+    val products: List<Product>
+        get() = _products
 
     private fun addReceipt() = viewModelScope.launch {
         val receipt = Receipt(
@@ -41,16 +47,39 @@ class ReceiptFormViewModel @Inject constructor(
 
     fun uploadImage(file: File) = viewModelScope.launch {
         apiRepository.uploadImage(file).collect {
-            _imageUploadState.value = it
+            when (it) {
+                is Response.Loading -> _imageUploadState.value = Response.Loading
+                is Response.Success -> {
+                    _imageUploadState.value = Response.Success(false)
+                    _products = it.data?.toMutableStateList() ?: mutableStateListOf()
+                }
+                is Response.Failure -> _imageUploadState.value =Response.Failure(it.e)
+            }
         }
     }
 
-    fun deleteProduct(productApi: ProductApi): Boolean {
-        if (_imageUploadState.value is Response.Success<List<ProductApi>>)
-            _imageUploadState.value = (_imageUploadState.value as Response.Success<List<ProductApi>>).data?.toMutableList()?.also {
-                it?.remove(productApi)
-                Response.Success(it)
-            }
-        return true
+    fun changeProduct(product: Product, name: String, price: Int, quantity: Int) = _products.find {
+        it.id == product.id
+    }?.let {
+        it.name = name
+        it.price = price
+        it.quantity = quantity
     }
+
+    fun deleteProduct(product: Product) {
+        _products.remove(product)
+    }
+
+    fun addProduct() {
+        val lastId = _products.last().id
+        _products.add(Product(lastId + 1, "", 1, 0))
+    }
+
+//    class WellnessTask(
+//        val id: Int,
+//        val label: String,
+//        var initialChecked: MutableState<Boolean> = mutableStateOf(false)
+//    ) {
+//        var checked by mutableStateOf(initialChecked)
+//    }
 }

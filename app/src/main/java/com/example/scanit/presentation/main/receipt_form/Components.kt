@@ -3,7 +3,7 @@ package com.example.scanit.presentation.main.receipt_form
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -13,18 +13,14 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.scanit.R
-import com.example.scanit.domain.model.ProductApi
+import com.example.scanit.domain.model.Product
 
 @Composable
 fun ProductEdit(
     modifier: Modifier = Modifier,
-    product: ProductApi,
-    onDelete: (ProductApi) -> Boolean
+    product: Product,
+    onDelete: (Product) -> Unit
 ) {
-    var name by remember { mutableStateOf(product.name) }
-    var qu by remember { mutableStateOf("${product.quantity}") }
-    var price by remember { mutableStateOf("${product.price}") }
-
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -43,9 +39,9 @@ fun ProductEdit(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
-                value = name,
+                value = product.name,
                 onValueChange = {
-                    name = it
+
                 },
                 textStyle = TextStyle(
                     fontSize = 14.sp
@@ -64,9 +60,9 @@ fun ProductEdit(
                     modifier = Modifier
                         .weight(0.4f)
                         .height(50.dp),
-                    value = qu,
+                    value = product.quantity.toString(),
                     onValueChange = {
-                        qu = it
+
                     },
                     textStyle = TextStyle(
                         fontSize = 14.sp
@@ -82,9 +78,9 @@ fun ProductEdit(
                     modifier = Modifier
                         .weight(0.4f)
                         .height(50.dp),
-                    value = price,
+                    value = product.price.toString(),
                     onValueChange = {
-                        price = it
+
                     },
                     textStyle = TextStyle(
                         fontSize = 14.sp

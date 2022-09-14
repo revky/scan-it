@@ -2,6 +2,7 @@ package com.example.scanit.util
 
 import com.example.scanit.domain.model.Product
 import com.example.scanit.domain.model.ProductApi
+import com.example.scanit.domain.model.ProductState
 import com.example.scanit.domain.model.Receipt
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -20,11 +21,12 @@ fun Date.toDayOfTheWeek(): String {
 
 fun Receipt.toMap(): Map<String, Any> {
     return mapOf<String, Any>(
+        "idOwner" to this.idOwner,
         "date" to this.date
     )
 }
 
-fun ProductApi.toMap(): Map<String, Any> {
+fun ProductState.toMap(): Map<String, Any> {
     return mapOf<String, Any>(
         "name" to this.name,
         "quantity" to this.quantity,
@@ -32,6 +34,10 @@ fun ProductApi.toMap(): Map<String, Any> {
     )
 }
 
-fun ProductApi.toProduct(): Product {
-    return Product(this.id.toString(),this.name, this.quantity, (this.price * 100).toInt())
+fun ProductApi.toProductState(): ProductState {
+    return ProductState(this.id, this.name, this.quantity, (this.price * 100).toInt())
+}
+
+fun ProductState.toProduct(): Product {
+    return Product(this.id.toString(), this.name, this.quantity, this.price)
 }

@@ -13,13 +13,16 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.scanit.R
-import com.example.scanit.domain.model.Product
+import com.example.scanit.domain.model.ProductState
 
 @Composable
 fun ProductEdit(
     modifier: Modifier = Modifier,
-    product: Product,
-    onDelete: (Product) -> Unit
+    product: ProductState,
+    onDelete: (ProductState) -> Unit,
+    onNameChange: (ProductState, String) -> Unit,
+    onQuantityChange: (ProductState, String) -> Unit,
+    onPriceChange: (ProductState, String) -> Unit
 ) {
     Card(
         modifier = modifier
@@ -41,7 +44,7 @@ fun ProductEdit(
                     .height(50.dp),
                 value = product.name,
                 onValueChange = {
-
+                    onNameChange(product, it)
                 },
                 textStyle = TextStyle(
                     fontSize = 14.sp
@@ -62,7 +65,7 @@ fun ProductEdit(
                         .height(50.dp),
                     value = product.quantity.toString(),
                     onValueChange = {
-
+                        onQuantityChange(product, it)
                     },
                     textStyle = TextStyle(
                         fontSize = 14.sp
@@ -78,9 +81,9 @@ fun ProductEdit(
                     modifier = Modifier
                         .weight(0.4f)
                         .height(50.dp),
-                    value = product.price.toString(),
+                    value = "${product.price.toDouble() / 100}",
                     onValueChange = {
-
+                        onPriceChange(product, it)
                     },
                     textStyle = TextStyle(
                         fontSize = 14.sp

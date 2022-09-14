@@ -8,7 +8,9 @@ import com.google.firebase.firestore.CollectionReference
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class ProductsRepositoryImpl @Inject constructor(
@@ -40,7 +42,18 @@ class ProductsRepositoryImpl @Inject constructor(
         awaitClose()
     }
 
-    override fun addProduct(): Flow<Response<Boolean>> {
-        TODO("Not yet implemented")
-    }
+    override fun addProduct(
+        receiptId: String,
+        productMap: Map<String, Any>
+    ): Flow<Response<Boolean>> =
+        flow {
+            try {
+                emit(Response.Loading)
+                val productsRef = receiptsRef.document(receiptId).collection(PRODUCTS_REF)
+                productsRef.add(productMap).await()
+                emit(Response.Success(true))
+            } catch (e: Exception) {
+                emit(Response.Failure(e))
+            }
+        }
 }

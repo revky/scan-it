@@ -70,11 +70,11 @@ class ReceiptsRepositoryImpl @Inject constructor(
         awaitClose()
     }
 
-    override fun addReceipt(receiptMap: Map<String, Any>): Flow<Response<Boolean>> = flow{
+    override fun addReceipt(receiptMap: Map<String, Any>): Flow<Response<String>> = flow{
         try{
             emit(Response.Loading)
-            receiptsRef.add(receiptMap).await()
-            emit(Response.Success(true))
+            val docId = receiptsRef.add(receiptMap).await().id
+            emit(Response.Success(docId))
         } catch (e: Exception) {
             emit(Response.Failure(e))
         }

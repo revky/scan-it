@@ -33,8 +33,10 @@ fun ReceiptFormScreen(
             backgroundColor = Color.Transparent,
             topBar = {
                 ReceiptFormTopBar(
-                    saveReceipt = {},
-                    addProduct = {viewModel.addProduct()}
+                    saveReceipt = {
+                        viewModel.addReceipt()
+                    },
+                    addProduct = { viewModel.addProduct() }
                 )
             },
             bottomBar = {
@@ -63,12 +65,22 @@ fun ReceiptFormScreen(
                             )
                         }
 
-                        items(viewModel.products) { product ->
+                        items(viewModel.products) { item ->
                             ProductEdit(
-                                product = product
-                            ) { product ->
-                                viewModel.deleteProduct(product)
-                            }
+                                product = item,
+                                onDelete = { product ->
+                                    viewModel.deleteProduct(product)
+                                },
+                                onNameChange = { product, value ->
+                                    viewModel.changeProductName(product, value)
+                                },
+                                onQuantityChange = { product, value ->
+                                    viewModel.changeProductQuantity(product, value)
+                                },
+                                onPriceChange = { product, value ->
+                                    viewModel.changeProductPrice(product, value)
+                                }
+                            )
                         }
                     }
                     is Response.Failure -> {

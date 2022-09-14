@@ -7,5 +7,5 @@ import kotlinx.coroutines.flow.Flow
 interface BaseProductsRepository {
     fun getProducts(idReceipt: String): Flow<Response<List<Product>>>
 
-    fun addProduct(): Flow<Response<Boolean>>
+    fun addProduct(receiptId: String, productMap: Map<String, Any>): Flow<Response<Boolean>>
 }

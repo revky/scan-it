@@ -6,7 +6,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
-
 interface BaseReceiptsRepository {
 
     val receiptsState: StateFlow<Response<List<Receipt>>>
@@ -15,7 +14,7 @@ interface BaseReceiptsRepository {
 
     fun getReceipts(userId: String) : Flow<Response<List<Receipt>>>
 
-    fun addReceipt(receiptMap: Map<String, Any>): Flow<Response<Boolean>>
+    fun addReceipt(receiptMap: Map<String, Any>): Flow<Response<String>>
 
     fun deleteReceipt(receiptId: String): Flow<Response<Boolean>>
 }

@@ -1,5 +1,6 @@
 package com.example.scanit.presentation.main.receipts_tab
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -42,9 +43,16 @@ fun Receipt(
         ) {
             Text(text = receipt.date.toDayOfTheWeek())
             Text(text = receipt.date.toLongDateString())
-            Text(text = receipt.products.sumOf {
+
+            var price = receipt.products.sumOf {
                 it.price.toDouble() / 100
-            }.toString() + " zł")
+            }
+
+            var text = String.format("%.2f", price)
+
+            Log.d("chuj", text)
+
+            Text(text = text)
             IconButton(
                 onClick = {
                     onDeleteClick()

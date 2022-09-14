@@ -6,8 +6,9 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.scanit.data.repository.ApiRepositoryImpl
-import com.example.scanit.domain.model.Product
+import com.example.scanit.domain.model.ProductState
 import com.example.scanit.domain.model.Receipt
+import com.example.scanit.domain.repository.BaseProductsRepository
 import com.example.scanit.domain.repository.BaseReceiptsRepository
 import com.example.scanit.util.Response
 import com.example.scanit.util.toMap
@@ -25,7 +26,8 @@ import javax.inject.Inject
 class ReceiptFormViewModel @Inject constructor(
     private val apiRepository: ApiRepositoryImpl,
     private val user: FirebaseUser?,
-    private val receiptsRepository: BaseReceiptsRepository
+    private val receiptsRepository: BaseReceiptsRepository,
+    private val productsRepository: BaseProductsRepository,
 ) : ViewModel() {
 
     private val _imageUploadState: MutableStateFlow<Response<Boolean>> =
@@ -33,16 +35,32 @@ class ReceiptFormViewModel @Inject constructor(
     val imageUploadState: StateFlow<Response<Boolean>>
         get() = _imageUploadState
 
-    private var _products: SnapshotStateList<Product> = mutableStateListOf()
-    val products: List<Product>
+    private var _products: SnapshotStateList<ProductState> = mutableStateListOf()
+    val products: List<ProductState>
         get() = _products
 
-    private fun addReceipt() = viewModelScope.launch {
+    fun addReceipt() = viewModelScope.launch {
         val receipt = Receipt(
             idOwner = user!!.uid,
             date = Date()
         )
-        receiptsRepository.addReceipt(receipt.toMap()).collect()
+        receiptsRepository.addReceipt(receipt.toMap()).collect {
+            when (it) {
+                is Response.Loading -> {}
+                is Response.Success -> {
+                    addProductsToReceipt(it.data!!)
+                }
+                is Response.Failure -> {}
+            }
+        }
+    }
+
+    private fun addProductsToReceipt(receiptId: String) = viewModelScope.launch {
+        _products.forEach {
+            productsRepository.addProduct(
+                receiptId, it.toMap()
+            ).collect()
+        }
     }
 
     fun uploadImage(file: File) = viewModelScope.launch {
@@ -53,33 +71,41 @@ class ReceiptFormViewModel @Inject constructor(
                     _imageUploadState.value = Response.Success(false)
                     _products = it.data?.toMutableStateList() ?: mutableStateListOf()
                 }
-                is Response.Failure -> _imageUploadState.value =Response.Failure(it.e)
+                is Response.Failure -> _imageUploadState.value = Response.Failure(it.e)
             }
         }
     }
 
-    fun changeProduct(product: Product, name: String, price: Int, quantity: Int) = _products.find {
+    fun changeProductName(product: ProductState, name: String) = _products.find {
         it.id == product.id
     }?.let {
         it.name = name
-        it.price = price
-        it.quantity = quantity
     }
 
-    fun deleteProduct(product: Product) {
+    fun changeProductQuantity(product: ProductState, quantity: String) = _products.find {
+        it.id == product.id
+    }?.let {
+        if (quantity.isNotBlank())
+            it.quantity = quantity.toInt()
+        else
+            it.quantity = 0
+    }
+
+    fun changeProductPrice(product: ProductState, price: String) = _products.find {
+        it.id == product.id
+    }?.let {
+        if (price.isNotBlank())
+            it.price = (price.toDouble() * 100).toInt()
+        else
+            it.price = 0
+    }
+
+    fun deleteProduct(product: ProductState) {
         _products.remove(product)
     }
 
     fun addProduct() {
         val lastId = _products.last().id
-        _products.add(Product(lastId + 1, "", 1, 0))
+        _products.add(ProductState(lastId + 1, "", 1, 0))
     }
-
-//    class WellnessTask(
-//        val id: Int,
-//        val label: String,
-//        var initialChecked: MutableState<Boolean> = mutableStateOf(false)
-//    ) {
-//        var checked by mutableStateOf(initialChecked)
-//    }
 }
